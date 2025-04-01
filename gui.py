@@ -8,6 +8,13 @@ class UI_MainWindow(object):
             parent.setObjectName("MainWindow")
 
         self.parent = parent
+
+        play_pixmap = QPixmap("play_icon.png").scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.play_icon = QIcon(play_pixmap)
+
+        stop_pixmap = QPixmap("stop_icon.png").scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.stop_icon = QIcon(stop_pixmap)
+
         self.command = CommandRecorder(self, parent)
 
         parent.resize(700, 600)
@@ -137,13 +144,9 @@ class UI_MainWindow(object):
         self.loop_checkbox.setStyleSheet("color: white;")
         self.controls_layout.addWidget(self.loop_checkbox)
 
-        # Carregando ícones para Play e Stop com tamanho dobrado (64x64)
-        play_pixmap = QPixmap("play_icon.png").scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        play_icon = QIcon(play_pixmap)
-
         # Botão de Play/Stop sem fundo branco
         self.toggle_btn = QPushButton()
-        self.toggle_btn.setIcon(play_icon)
+        self.toggle_btn.setIcon(self.play_icon)
         self.toggle_btn.setIconSize(QSize(64, 64))  # Define o tamanho do ícone
         self.toggle_btn.setStyleSheet("background-color: transparent; border: none; padding: 5px;")
         self.toggle_btn.clicked.connect(parent.toggle_macro)
