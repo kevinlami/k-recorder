@@ -2,7 +2,7 @@ import sys
 import os
 
 from qt_core import *
-from gui6 import UI_MainWindow
+from gui import UI_MainWindow
 
 class MainWindow(QMainWindow):
     def __init__(self):

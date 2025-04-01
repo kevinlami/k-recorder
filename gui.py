@@ -1,5 +1,5 @@
 from qt_core import *
-from command6 import CommandRecorder
+from command import CommandRecorder
 import os
 
 class UI_MainWindow(object):
