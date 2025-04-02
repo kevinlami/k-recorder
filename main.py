@@ -5,6 +5,8 @@ import json
 import cv2
 import numpy as np
 import pyautogui
+import keyboard
+import threading
 
 from qt_core import *
 from gui import UI_MainWindow
@@ -160,9 +162,17 @@ class MainWindow(QMainWindow):
             else:
                 self.current_index += 1  
 
-        QTimer.singleShot(200, self.execute_next_action)  
+        QTimer.singleShot(200, self.execute_next_action)
+
+def run_keyboard_listener():
+    """Mantém o script rodando para capturar os atalhos globais"""
+    keyboard.wait()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+
+    keyboard_thread = threading.Thread(target=run_keyboard_listener, daemon=True)
+    keyboard_thread.start()
+
     window = MainWindow()
     sys.exit(app.exec())
