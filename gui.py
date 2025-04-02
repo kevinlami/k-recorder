@@ -208,19 +208,19 @@ class UI_MainWindow(object):
         self.action_buttons_layout.addWidget(self.add_key_btn)
 
         self.press_key_btn = QPushButton("Pressionar Tecla")
-        #self.press_key_btn.clicked.connect(self.action.add_press_key)
+        self.press_key_btn.clicked.connect(self.action.add_press_key)
         self.action_buttons_layout.addWidget(self.press_key_btn)
 
         self.wait_btn = QPushButton("Adicionar Espera")
-        #self.wait_btn.clicked.connect(self.action.add_wait)
+        self.wait_btn.clicked.connect(self.action.add_wait)
         self.action_buttons_layout.addWidget(self.wait_btn)
 
         self.add_click_btn = QPushButton("Adicionar Clique")
-        #self.add_click_btn.clicked.connect(self.action.add_click)
+        self.add_click_btn.clicked.connect(self.action.add_click)
         self.action_buttons_layout.addWidget(self.add_click_btn)
 
         self.move_mouse_btn = QPushButton("Mover Mouse")
-        #self.move_mouse_btn.clicked.connect(self.action.move_mouse)
+        self.move_mouse_btn.clicked.connect(self.action.move_mouse)
         self.action_buttons_layout.addWidget(self.move_mouse_btn)
 
         self.add_image_btn = QPushButton("Verificar Imagem")
