@@ -140,7 +140,7 @@ class UI_MainWindow(object):
 
         # Checkbox de Loop Infinito
         self.loop_checkbox = QCheckBox("Loop Infinito")
-        self.loop_checkbox.setChecked(parent.loop_var)
+        self.loop_checkbox.setChecked(False)
         self.loop_checkbox.setStyleSheet("color: white;")
         self.controls_layout.addWidget(self.loop_checkbox)
 

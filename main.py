@@ -15,7 +15,6 @@ class MainWindow(QMainWindow):
 
         self.is_running = False
         self.actions = []
-        self.loop_var = False
         self.current_index = 0
 
         self.setWindowTitle("K Recorder")
@@ -97,7 +96,7 @@ class MainWindow(QMainWindow):
             return
 
         if self.current_index >= len(self.actions):
-            if self.loop_var:
+            if self.ui.loop_checkbox.isChecked():
                 self.current_index = 0
             else:
                 self.stop_macro()
