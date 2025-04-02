@@ -1,5 +1,6 @@
 from qt_core import *
 from command import CommandRecorder
+from action import ActionRecorder
 import os
 
 class UI_MainWindow(object):
@@ -16,6 +17,7 @@ class UI_MainWindow(object):
         self.stop_icon = QIcon(stop_pixmap)
 
         self.command = CommandRecorder(self, parent)
+        self.action = ActionRecorder(self, parent)
 
         parent.resize(700, 600)
         parent.setMinimumSize(700, 600)
@@ -33,14 +35,9 @@ class UI_MainWindow(object):
         self.content_layout.setContentsMargins(0,0,0,0)
         self.content_layout.setSpacing(0)
 
-        self.left_menu = QFrame()
-        self.left_menu.setStyleSheet("background-color: red")
-        self.left_menu.setMaximumWidth(75)
-        self.left_menu.setMinimumWidth(75)
-
         self.create_command_list()
+        self.create_actions()
 
-        self.content_layout.addWidget(self.left_menu)
         self.content_layout.addWidget(self.main_content)
 
         self.create_menu(parent)
@@ -89,11 +86,11 @@ class UI_MainWindow(object):
 
         self.main_content_layout = QVBoxLayout(self.main_content)
         self.main_content_layout.setContentsMargins(10, 10, 10, 10)
-        self.main_content_layout.setSpacing(0)
+        self.main_content_layout.setSpacing(10)
 
+        # Lista de ações
         self.actions_listbox = QListWidget()
         self.actions_listbox.setSelectionMode(QAbstractItemView.ExtendedSelection)
-
         self.actions_listbox.setStyleSheet("""
             QListWidget {
                 background-color: #f0f0f0;
@@ -112,6 +109,42 @@ class UI_MainWindow(object):
         """)
 
         self.main_content_layout.addWidget(self.actions_listbox)
+
+        # Frame para botões de controle
+        self.move_buttons_frame = QFrame()
+        self.move_buttons_layout = QHBoxLayout(self.move_buttons_frame)
+        self.move_buttons_layout.setSpacing(10)
+
+        # Botões
+        self.remove_btn = QPushButton("🗑 Remover")
+        self.remove_btn.setStyleSheet("background-color: #d9534f; color: white; font-weight: bold;")
+        self.remove_btn.clicked.connect(self.command.remove_item)
+
+        self.move_up_btn = QPushButton("🔼 Cima")
+        self.move_up_btn.setStyleSheet("background-color: #0275d8; color: white; font-weight: bold;")
+        self.move_up_btn.clicked.connect(self.command.move_up)
+
+        self.move_down_btn = QPushButton("🔽 Baixo")
+        self.move_down_btn.setStyleSheet("background-color: #0275d8; color: white; font-weight: bold;")
+        self.move_down_btn.clicked.connect(self.command.move_down)
+
+        self.duplicate_btn = QPushButton("📄 Duplicar")
+        self.duplicate_btn.setStyleSheet("background-color: #f0ad4e; color: white; font-weight: bold;")
+        self.duplicate_btn.clicked.connect(self.command.duplicate_items)
+
+        self.reset_btn = QPushButton("🔄 Resetar")
+        self.reset_btn.setStyleSheet("background-color: #5bc0de; color: white; font-weight: bold;")
+        self.reset_btn.clicked.connect(self.command.reset_macro)
+
+        # Adicionando os botões ao layout
+        self.move_buttons_layout.addWidget(self.remove_btn)
+        self.move_buttons_layout.addWidget(self.move_up_btn)
+        self.move_buttons_layout.addWidget(self.move_down_btn)
+        self.move_buttons_layout.addWidget(self.duplicate_btn)
+        self.move_buttons_layout.addWidget(self.reset_btn)
+
+        # Adicionando o frame ao layout principal
+        self.main_content_layout.addWidget(self.move_buttons_frame)
 
     def create_header(self, parent): 
         """Cria o cabeçalho no PySide6."""
@@ -158,6 +191,47 @@ class UI_MainWindow(object):
 
         # Adiciona o cabeçalho ao layout principal
         self.main_layout.addWidget(self.top_menu)
+
+    def create_actions(self):
+        """Cria a área de ações."""
+        # Frame para botões de ação
+        self.action_buttons_frame = QFrame()
+        self.action_buttons_frame.setStyleSheet("background-color: #282a36")
+
+        self.action_buttons_layout = QVBoxLayout(self.action_buttons_frame)
+        self.action_buttons_layout.setContentsMargins(10, 10, 10, 10)
+        self.action_buttons_layout.setSpacing(5)
+
+        # Botões de ação
+        self.add_key_btn = QPushButton("Clicar Tecla")
+        self.add_key_btn.clicked.connect(self.action.add_key)
+        self.action_buttons_layout.addWidget(self.add_key_btn)
+
+        self.press_key_btn = QPushButton("Pressionar Tecla")
+        #self.press_key_btn.clicked.connect(self.action.add_press_key)
+        self.action_buttons_layout.addWidget(self.press_key_btn)
+
+        self.wait_btn = QPushButton("Adicionar Espera")
+        #self.wait_btn.clicked.connect(self.action.add_wait)
+        self.action_buttons_layout.addWidget(self.wait_btn)
+
+        self.add_click_btn = QPushButton("Adicionar Clique")
+        #self.add_click_btn.clicked.connect(self.action.add_click)
+        self.action_buttons_layout.addWidget(self.add_click_btn)
+
+        self.move_mouse_btn = QPushButton("Mover Mouse")
+        #self.move_mouse_btn.clicked.connect(self.action.move_mouse)
+        self.action_buttons_layout.addWidget(self.move_mouse_btn)
+
+        self.add_image_btn = QPushButton("Verificar Imagem")
+        #self.add_image_btn.clicked.connect(self.action.add_image_check)
+        self.action_buttons_layout.addWidget(self.add_image_btn)
+
+        self.add_group_btn = QPushButton("Adicionar Grupo")
+        #self.add_group_btn.clicked.connect(self.action.add_group)
+        self.action_buttons_layout.addWidget(self.add_group_btn)
+
+        self.content_layout.addWidget(self.action_buttons_frame)
 
     def update_listbox(self):
         """Atualiza o QListWidget sem perder a posição do scroll."""
