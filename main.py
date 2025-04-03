@@ -1,3 +1,5 @@
+import ctypes
+ctypes.windll.user32.SetProcessDPIAware()
 import sys
 import os
 import time

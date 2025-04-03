@@ -224,7 +224,7 @@ class UI_MainWindow(object):
         self.action_buttons_layout.addWidget(self.move_mouse_btn)
 
         self.add_image_btn = QPushButton("Verificar Imagem")
-        #self.add_image_btn.clicked.connect(self.action.add_image_check)
+        self.add_image_btn.clicked.connect(self.action.add_image_check)
         self.action_buttons_layout.addWidget(self.add_image_btn)
 
         self.add_group_btn = QPushButton("Adicionar Grupo")
