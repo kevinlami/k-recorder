@@ -214,3 +214,26 @@ class ActionRecorder:
     def add_image_to_list(self, image_path):
         self.parent.actions.append(("image_check", image_path))
         self.gui.update_listbox()
+
+    def add_group(self):
+        """Adiciona um novo grupo em torno dos itens selecionados ou ao final da lista."""
+        group_name, ok = QInputDialog.getText(None, "Nome do Grupo", "Digite o nome do grupo:")
+        if not ok or not group_name:
+            return  # Se o usuário cancelar ou não digitar nada, não faz nada.
+
+        # Obtém os índices selecionados no QListWidget (em PySide6)
+        selected_indices = sorted([index.row() for index in self.gui.actions_listbox.selectedIndexes()])
+        
+        if selected_indices:
+            start_index = selected_indices[0]
+            end_index = selected_indices[-1] + 1  # Ajusta para incluir o último item
+            
+            # Insere o grupo nos índices correspondentes (usando self.parent no lugar de self.main)
+            self.parent.actions.insert(start_index, ["group_start", group_name])
+            self.parent.actions.insert(end_index + 1, ["group_end", group_name])
+        else:
+            # Se não houver itens selecionados, adiciona um grupo vazio no final
+            self.parent.actions.append(["group_start", group_name])
+            self.parent.actions.append(["group_end", group_name])
+        
+        self.gui.update_listbox()

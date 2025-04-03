@@ -228,7 +228,7 @@ class UI_MainWindow(object):
         self.action_buttons_layout.addWidget(self.add_image_btn)
 
         self.add_group_btn = QPushButton("Adicionar Grupo")
-        #self.add_group_btn.clicked.connect(self.action.add_group)
+        self.add_group_btn.clicked.connect(self.action.add_group)
         self.action_buttons_layout.addWidget(self.add_group_btn)
 
         self.content_layout.addWidget(self.action_buttons_frame)
