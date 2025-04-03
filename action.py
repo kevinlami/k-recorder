@@ -198,7 +198,6 @@ class ActionRecorder:
         listener.start()
 
     def add_image_check(self):
-        QMessageBox.information(None, "Capturar Imagem", "Clique e arraste para selecionar uma região.")
         self.overlay = OverlaySelection()
         self.overlay.region_selected.connect(self.capture_image)
         self.overlay.show_overlay()
