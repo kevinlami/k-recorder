@@ -70,14 +70,11 @@ class ImageCaptureThread(QThread):
     def __init__(self, region, file_path):
         super().__init__()
         self.region = region
-        self.file_path = file_path  # Armazena o caminho do arquivo
+        self.file_path = file_path
 
     def run(self):
-        """Captura e salva a imagem."""
         x, y, w, h = self.region.x(), self.region.y(), self.region.width(), self.region.height()
         image = pyautogui.screenshot(region=(x, y, w, h))
-
-        # Agora a thread apenas salva a imagem, sem abrir diálogos
         image.save(self.file_path)
         self.image_saved.emit(self.file_path)
 
@@ -201,26 +198,20 @@ class ActionRecorder:
         listener.start()
 
     def add_image_check(self):
-        """Inicia a seleção da área da tela."""
         QMessageBox.information(None, "Capturar Imagem", "Clique e arraste para selecionar uma região.")
-
         self.overlay = OverlaySelection()
         self.overlay.region_selected.connect(self.capture_image)
         self.overlay.show_overlay()
 
     def capture_image(self, region):
-        """Captura a imagem da região selecionada."""
         print("Capturando imagem da região:", region)
-
-        # Exibe a janela de salvar ANTES de iniciar a thread (na thread principal)
         file_path, _ = QFileDialog.getSaveFileName(None, "Salvar Imagem", "", "PNG Files (*.png)")
-
-        if file_path:  # Só continua se o usuário selecionar um caminho válido
+        
+        if file_path:
             self.capture_thread = ImageCaptureThread(region, file_path)
             self.capture_thread.image_saved.connect(self.add_image_to_list)
             self.capture_thread.start()
 
     def add_image_to_list(self, image_path):
-        """Adiciona a imagem capturada à lista de ações."""
         self.parent.actions.append(("image_check", image_path))
         self.gui.update_listbox()
