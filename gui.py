@@ -107,8 +107,8 @@ class UI_MainWindow(object):
         self.actions_listbox.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.actions_listbox.setStyleSheet("""
             QListWidget {
-                background-color: #f0f0f0;
-                border: 1px solid #ccc;
+                background-color: #6D7393;
+                border: 1px solid #6D7393;
                 padding: 5px;
                 font-size: 14px;
             }
@@ -129,25 +129,59 @@ class UI_MainWindow(object):
         self.move_buttons_layout = QHBoxLayout(self.move_buttons_frame)
         self.move_buttons_layout.setSpacing(10)
 
+        # Estilo moderno para os botões
+        modern_button_style = """
+            QPushButton {
+                background-color: [bg];
+                color: white;
+                border: none;
+                border-radius: 5px;
+                padding: 10px;
+                font-size: 14px;
+                text-align: left;
+            }
+            QPushButton:hover {
+                background-color: [bg-hover];
+            }
+            QPushButton:pressed {
+                background-color: [bg-press];
+            }
+        """
+
+        blue_button_style = modern_button_style.replace('[bg]', '#0275d8').replace('[bg-hover]', '#117CD9').replace('[bg-press]', '#117CD9')
+        red_button_style = modern_button_style.replace('[bg]', '#d9534f').replace('[bg-hover]', '#D9615D').replace('[bg-press]', '#D9615D')
+        yellow_button_style = modern_button_style.replace('[bg]', '#f0ad4e').replace('[bg-hover]', '#F0B35D').replace('[bg-press]', '#F0B35D')
+        light_blue_button_style = modern_button_style.replace('[bg]', '#5BC0DE').replace('[bg-hover]', '#6AC3DE').replace('[bg-press]', '#6AC3DE')
+
         # Botões
-        self.remove_btn = QPushButton("🗑 Remover")
-        self.remove_btn.setStyleSheet("background-color: #d9534f; color: white; font-weight: bold;")
+        self.remove_btn = QPushButton("  Remover")
+        self.remove_btn.setStyleSheet(red_button_style)
+        self.remove_btn.setIcon(QIcon("icons/delete.svg"))
+        self.remove_btn.setIconSize(QSize(18, 18))
         self.remove_btn.clicked.connect(self.command.remove_item)
 
-        self.move_up_btn = QPushButton("🔼 Cima")
-        self.move_up_btn.setStyleSheet("background-color: #0275d8; color: white; font-weight: bold;")
+        self.move_up_btn = QPushButton("  Cima")
+        self.move_up_btn.setStyleSheet(blue_button_style)
+        self.move_up_btn.setIcon(QIcon("icons/move_up.svg"))
+        self.move_up_btn.setIconSize(QSize(18, 18))
         self.move_up_btn.clicked.connect(self.command.move_up)
 
-        self.move_down_btn = QPushButton("🔽 Baixo")
-        self.move_down_btn.setStyleSheet("background-color: #0275d8; color: white; font-weight: bold;")
+        self.move_down_btn = QPushButton("  Baixo")
+        self.move_down_btn.setStyleSheet(blue_button_style)
+        self.move_down_btn.setIcon(QIcon("icons/move_down.svg"))
+        self.move_down_btn.setIconSize(QSize(18, 18))
         self.move_down_btn.clicked.connect(self.command.move_down)
 
-        self.duplicate_btn = QPushButton("📄 Duplicar")
-        self.duplicate_btn.setStyleSheet("background-color: #f0ad4e; color: white; font-weight: bold;")
+        self.duplicate_btn = QPushButton("  Duplicar")
+        self.duplicate_btn.setStyleSheet(yellow_button_style)
+        self.duplicate_btn.setIcon(QIcon("icons/duplicate.svg"))
+        self.duplicate_btn.setIconSize(QSize(18, 18))
         self.duplicate_btn.clicked.connect(self.command.duplicate_items)
 
-        self.reset_btn = QPushButton("🔄 Resetar")
-        self.reset_btn.setStyleSheet("background-color: #5bc0de; color: white; font-weight: bold;")
+        self.reset_btn = QPushButton("  Resetar")
+        self.reset_btn.setStyleSheet(light_blue_button_style)
+        self.reset_btn.setIcon(QIcon("icons/reset.svg"))
+        self.reset_btn.setIconSize(QSize(18, 18))
         self.reset_btn.clicked.connect(self.command.reset_macro)
 
         # Adicionando os botões ao layout
@@ -165,7 +199,7 @@ class UI_MainWindow(object):
 
         # Criando um widget para conter o cabeçalho
         self.top_menu = QFrame()
-        self.top_menu.setStyleSheet("background-color: #44478a")
+        self.top_menu.setStyleSheet("background-color: #404147")
         self.top_menu.setMaximumHeight(75)
         self.top_menu.setMinimumHeight(75)
 
