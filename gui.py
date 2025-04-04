@@ -194,50 +194,79 @@ class UI_MainWindow(object):
         # Adicionando o frame ao layout principal
         self.main_content_layout.addWidget(self.move_buttons_frame)
 
-    def create_header(self, parent): 
-        """Cria o cabeçalho no PySide6."""
-
-        # Criando um widget para conter o cabeçalho
+    def create_header(self, parent):
+        """Cria um cabeçalho moderno no PySide6."""
+        # Cria o QFrame do cabeçalho com gradiente
         self.top_menu = QFrame()
+        self.top_menu.setFixedHeight(75)
         self.top_menu.setStyleSheet("background-color: #404147")
-        self.top_menu.setMaximumHeight(75)
-        self.top_menu.setMinimumHeight(75)
-
+        
+        # Layout do cabeçalho com margens e espaçamento otimizados
         self.header_layout = QHBoxLayout(self.top_menu)
-        self.header_layout.setContentsMargins(10, 5, 10, 5)
-
-        # Título alinhado à esquerda
+        self.header_layout.setContentsMargins(20, 10, 20, 10)
+        self.header_layout.setSpacing(10)
+        
+        # Título com fonte moderna e maior
         self.title_label = QLabel("K Recorder")
-        self.title_label.setStyleSheet("font-size: 18px; font-weight: bold; color: white;")
+        font = QFont("Segoe UI", 20, QFont.Bold)  # Você pode trocar por outra fonte moderna instalada no sistema
+        self.title_label.setFont(font)
+        self.title_label.setStyleSheet("color: white;")
         self.header_layout.addWidget(self.title_label)
-
-        # Adiciona um espaço flexível para empurrar os botões para a direita
+        
         self.header_layout.addStretch()
-
-        # Criando um widget para conter os botões de controle
+        
+        # Widget de controles à direita
         self.controls_widget = QWidget()
-        self.controls_layout = QHBoxLayout(self.controls_widget)
-        self.controls_layout.setContentsMargins(0, 0, 0, 0)
-
-        # Checkbox de Loop Infinito
+        controls_layout = QHBoxLayout(self.controls_widget)
+        controls_layout.setContentsMargins(0, 0, 0, 0)
+        controls_layout.setSpacing(10)
+        
+        # Checkbox estilizado como toggle switch
         self.loop_checkbox = QCheckBox("Loop Infinito")
         self.loop_checkbox.setChecked(False)
-        self.loop_checkbox.setStyleSheet("color: white;")
-        self.controls_layout.addWidget(self.loop_checkbox)
-
-        # Botão de Play/Stop sem fundo branco
+        self.loop_checkbox.setStyleSheet("""
+            QCheckBox {
+                color: white;
+                font-size: 16px;
+            }
+            QCheckBox::indicator {
+                width: 15px;
+                height: 15px;
+                border: 3px solid #888;
+            }
+            QCheckBox::indicator:unchecked {
+                border-radius: 10px;
+                background-color: #888;
+            }
+            QCheckBox::indicator:checked {
+                border-radius: 10px;
+                background-color: #65EB6A;
+            }
+        """)
+        controls_layout.addWidget(self.loop_checkbox)
+        
+        # Botão de Play/Stop com efeitos de hover e pressed
         self.toggle_btn = QPushButton()
         self.toggle_btn.setIcon(self.play_icon)
-        self.toggle_btn.setIconSize(QSize(64, 64))  # Define o tamanho do ícone
-        self.toggle_btn.setStyleSheet("background-color: transparent; border: none; padding: 5px;")
+        self.toggle_btn.setIconSize(QSize(64, 64))
+        self.toggle_btn.setStyleSheet("""
+            QPushButton {
+                background-color: transparent;
+                border: none;
+                padding: 5px;
+            }
+            QPushButton:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+            QPushButton:pressed {
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+        """)
         self.toggle_btn.clicked.connect(parent.toggle_macro)
-
-        self.controls_layout.addWidget(self.toggle_btn)
-
-        # Adiciona os controles ao layout do cabeçalho
+        controls_layout.addWidget(self.toggle_btn)
+        
         self.header_layout.addWidget(self.controls_widget)
-
-        # Adiciona o cabeçalho ao layout principal
+        
         self.main_layout.addWidget(self.top_menu)
 
     def create_actions(self):
