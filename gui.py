@@ -19,8 +19,8 @@ class UI_MainWindow(object):
         self.command = CommandRecorder(self, parent)
         self.action = ActionRecorder(self, parent)
 
-        parent.resize(700, 600)
-        parent.setMinimumSize(700, 600)
+        parent.resize(800, 600)
+        parent.setMinimumSize(800, 600)
 
         self.central_frame = QFrame()
 
@@ -47,35 +47,49 @@ class UI_MainWindow(object):
 
         parent.setCentralWidget(self.central_frame)
 
-    def create_menu(self, parent):
-        menubar = parent.menuBar()  # Agora pega a barra de menu da MainWindow
+        # Aplica stylesheet global para modernizar a interface
+        self.apply_styles()
 
-        # Menu "Arquivo"
+    def apply_styles(self):
+        style = """
+            QMainWindow { background-color: #1e1e1e; }
+            QMenuBar { background-color: #333; color: white; font-size: 14px; }
+            QMenuBar::item { padding: 5px 15px; }
+            QMenuBar::item:selected { background-color: #444; }
+            QMenu { background-color: #333; color: white; }
+            QMenu::item:selected { background-color: #444; }
+            QPushButton { border: none; padding: 8px 12px; border-radius: 4px; font-size: 14px; }\n"
+            QPushButton:hover { background-color: #555; }\n"
+            QListWidget { border: 1px solid #ccc; font-size: 14px; }\n"
+            QCheckBox { font-size: 14px; color: white; }\n"
+        """
+        self.parent.setStyleSheet(style)
+
+    def create_menu(self, parent):
+        menubar = parent.menuBar()
         file_menu = menubar.addMenu("Arquivo")
 
-        save_action = QAction("Salvar Macros", parent)  # Corrigido
+        save_action = QAction("Salvar Macros", parent)
         save_action.triggered.connect(self.command.save_macros)
         file_menu.addAction(save_action)
 
-        load_action = QAction("Carregar Macros", parent)  # Corrigido
+        load_action = QAction("Carregar Macros", parent)
         load_action.triggered.connect(self.command.load_macros)
         file_menu.addAction(load_action)
 
         file_menu.addSeparator()
 
-        exit_action = QAction("Sair", parent)  # Corrigido
+        exit_action = QAction("Sair", parent)
         exit_action.triggered.connect(parent.close)
         file_menu.addAction(exit_action)
 
-        # Menu "Macro"
         macro_menu = menubar.addMenu("Macro")
-
-        run_action = QAction("▶ Rodar Macro", parent)  # Corrigido
+        run_action = QAction("▶ Rodar Macro", parent)
         run_action.setShortcut(QKeySequence("F5"))
         run_action.triggered.connect(parent.start_macro)
         macro_menu.addAction(run_action)
 
-        stop_action = QAction("■ Parar Macro", parent)  # Corrigido
+        stop_action = QAction("■ Parar Macro", parent)
         stop_action.setShortcut(QKeySequence("F6"))
         stop_action.triggered.connect(parent.stop_macro)
         macro_menu.addAction(stop_action)
@@ -193,43 +207,87 @@ class UI_MainWindow(object):
         self.main_layout.addWidget(self.top_menu)
 
     def create_actions(self):
-        """Cria a área de ações."""
-        # Frame para botões de ação
+        # Cria o frame de botões de ação com fundo escuro
         self.action_buttons_frame = QFrame()
-        self.action_buttons_frame.setStyleSheet("background-color: #282a36")
-
-        self.action_buttons_layout = QVBoxLayout(self.action_buttons_frame)
-        self.action_buttons_layout.setContentsMargins(10, 10, 10, 10)
-        self.action_buttons_layout.setSpacing(5)
-
-        # Botões de ação
-        self.add_key_btn = QPushButton("Clicar Tecla")
+        self.action_buttons_frame.setStyleSheet("background-color: #282a36;")
+        action_layout = QVBoxLayout(self.action_buttons_frame)
+        action_layout.setContentsMargins(10, 10, 10, 10)
+        action_layout.setSpacing(10)
+        
+        # Estilo moderno para os botões
+        modern_button_style = """
+            QPushButton {
+                background-color: #3c3f41;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                padding: 10px;
+                font-size: 14px;
+                text-align: left;
+            }
+            QPushButton:hover {
+                background-color: #505355;
+            }
+            QPushButton:pressed {
+                background-color: #2d2f31;
+            }
+        """
+        
+        # Botão: Clicar Tecla
+        self.add_key_btn = QPushButton("  Clicar Tecla")
+        self.add_key_btn.setStyleSheet(modern_button_style)
+        self.add_key_btn.setIcon(QIcon("icons/key.svg"))
+        self.add_key_btn.setIconSize(QSize(24, 24))
         self.add_key_btn.clicked.connect(self.action.add_key)
-        self.action_buttons_layout.addWidget(self.add_key_btn)
-
-        self.press_key_btn = QPushButton("Pressionar Tecla")
+        action_layout.addWidget(self.add_key_btn)
+        
+        # Botão: Pressionar Tecla
+        self.press_key_btn = QPushButton("  Pressionar Tecla")
+        self.press_key_btn.setStyleSheet(modern_button_style)
+        self.press_key_btn.setIcon(QIcon("icons/press_key.svg"))
+        self.press_key_btn.setIconSize(QSize(24, 24))
         self.press_key_btn.clicked.connect(self.action.add_press_key)
-        self.action_buttons_layout.addWidget(self.press_key_btn)
-
-        self.wait_btn = QPushButton("Adicionar Espera")
+        action_layout.addWidget(self.press_key_btn)
+        
+        # Botão: Adicionar Espera
+        self.wait_btn = QPushButton("  Adicionar Espera")
+        self.wait_btn.setStyleSheet(modern_button_style)
+        self.wait_btn.setIcon(QIcon("icons/wait.svg"))
+        self.wait_btn.setIconSize(QSize(24, 24))
         self.wait_btn.clicked.connect(self.action.add_wait)
-        self.action_buttons_layout.addWidget(self.wait_btn)
-
-        self.add_click_btn = QPushButton("Adicionar Clique")
+        action_layout.addWidget(self.wait_btn)
+        
+        # Botão: Adicionar Clique
+        self.add_click_btn = QPushButton("  Adicionar Clique")
+        self.add_click_btn.setStyleSheet(modern_button_style)
+        self.add_click_btn.setIcon(QIcon("icons/mouse_click.svg"))
+        self.add_click_btn.setIconSize(QSize(24, 24))
         self.add_click_btn.clicked.connect(self.action.add_click)
-        self.action_buttons_layout.addWidget(self.add_click_btn)
-
-        self.move_mouse_btn = QPushButton("Mover Mouse")
+        action_layout.addWidget(self.add_click_btn)
+        
+        # Botão: Mover Mouse
+        self.move_mouse_btn = QPushButton("  Mover Mouse")
+        self.move_mouse_btn.setStyleSheet(modern_button_style)
+        self.move_mouse_btn.setIcon(QIcon("icons/move_mouse.svg"))
+        self.move_mouse_btn.setIconSize(QSize(24, 24))
         self.move_mouse_btn.clicked.connect(self.action.move_mouse)
-        self.action_buttons_layout.addWidget(self.move_mouse_btn)
-
-        self.add_image_btn = QPushButton("Verificar Imagem")
+        action_layout.addWidget(self.move_mouse_btn)
+        
+        # Botão: Verificar Imagem
+        self.add_image_btn = QPushButton("  Verificar Imagem")
+        self.add_image_btn.setStyleSheet(modern_button_style)
+        self.add_image_btn.setIcon(QIcon("icons/image.svg"))
+        self.add_image_btn.setIconSize(QSize(24, 24))
         self.add_image_btn.clicked.connect(self.action.add_image_check)
-        self.action_buttons_layout.addWidget(self.add_image_btn)
-
-        self.add_group_btn = QPushButton("Adicionar Grupo")
+        action_layout.addWidget(self.add_image_btn)
+        
+        # Botão: Adicionar Grupo
+        self.add_group_btn = QPushButton("  Adicionar Grupo")
+        self.add_group_btn.setStyleSheet(modern_button_style)
+        self.add_group_btn.setIcon(QIcon("icons/group.svg"))
+        self.add_group_btn.setIconSize(QSize(24, 24))
         self.add_group_btn.clicked.connect(self.action.add_group)
-        self.action_buttons_layout.addWidget(self.add_group_btn)
+        action_layout.addWidget(self.add_group_btn)
 
         self.content_layout.addWidget(self.action_buttons_frame)
 
