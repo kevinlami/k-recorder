@@ -10,10 +10,10 @@ class UI_MainWindow(object):
 
         self.parent = parent
 
-        play_pixmap = QPixmap("play_icon.png").scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        play_pixmap = QPixmap("icons/play_icon.png").scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.play_icon = QIcon(play_pixmap)
 
-        stop_pixmap = QPixmap("stop_icon.png").scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        stop_pixmap = QPixmap("icons/stop_icon.png").scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.stop_icon = QIcon(stop_pixmap)
 
         self.command = CommandRecorder(self, parent)
