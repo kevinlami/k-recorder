@@ -155,30 +155,35 @@ class UI_MainWindow(object):
 
         # Botões
         self.remove_btn = QPushButton("  Remover")
+        self.remove_btn.setCursor(Qt.PointingHandCursor)
         self.remove_btn.setStyleSheet(red_button_style)
         self.remove_btn.setIcon(QIcon("icons/delete.svg"))
         self.remove_btn.setIconSize(QSize(18, 18))
         self.remove_btn.clicked.connect(self.command.remove_item)
 
         self.move_up_btn = QPushButton("  Cima")
+        self.move_up_btn.setCursor(Qt.PointingHandCursor)
         self.move_up_btn.setStyleSheet(blue_button_style)
         self.move_up_btn.setIcon(QIcon("icons/move_up.svg"))
         self.move_up_btn.setIconSize(QSize(18, 18))
         self.move_up_btn.clicked.connect(self.command.move_up)
 
         self.move_down_btn = QPushButton("  Baixo")
+        self.move_down_btn.setCursor(Qt.PointingHandCursor)
         self.move_down_btn.setStyleSheet(blue_button_style)
         self.move_down_btn.setIcon(QIcon("icons/move_down.svg"))
         self.move_down_btn.setIconSize(QSize(18, 18))
         self.move_down_btn.clicked.connect(self.command.move_down)
 
         self.duplicate_btn = QPushButton("  Duplicar")
+        self.duplicate_btn.setCursor(Qt.PointingHandCursor)
         self.duplicate_btn.setStyleSheet(yellow_button_style)
         self.duplicate_btn.setIcon(QIcon("icons/duplicate.svg"))
         self.duplicate_btn.setIconSize(QSize(18, 18))
         self.duplicate_btn.clicked.connect(self.command.duplicate_items)
 
         self.reset_btn = QPushButton("  Resetar")
+        self.reset_btn.setCursor(Qt.PointingHandCursor)
         self.reset_btn.setStyleSheet(light_blue_button_style)
         self.reset_btn.setIcon(QIcon("icons/reset.svg"))
         self.reset_btn.setIconSize(QSize(18, 18))
@@ -223,6 +228,7 @@ class UI_MainWindow(object):
         
         # Checkbox estilizado como toggle switch
         self.loop_checkbox = QCheckBox("Loop Infinito")
+        self.loop_checkbox.setCursor(Qt.PointingHandCursor)
         self.loop_checkbox.setChecked(False)
         self.loop_checkbox.setStyleSheet("""
             QCheckBox {
@@ -247,6 +253,7 @@ class UI_MainWindow(object):
         
         # Botão de Play/Stop com efeitos de hover e pressed
         self.toggle_btn = QPushButton()
+        self.toggle_btn.setCursor(Qt.PointingHandCursor)
         self.toggle_btn.setIcon(self.play_icon)
         self.toggle_btn.setIconSize(QSize(64, 64))
         self.toggle_btn.setStyleSheet("""
@@ -298,6 +305,7 @@ class UI_MainWindow(object):
         
         # Botão: Clicar Tecla
         self.add_key_btn = QPushButton("  Clicar Tecla")
+        self.add_key_btn.setCursor(Qt.PointingHandCursor)
         self.add_key_btn.setStyleSheet(modern_button_style)
         self.add_key_btn.setIcon(QIcon("icons/key.svg"))
         self.add_key_btn.setIconSize(QSize(24, 24))
@@ -306,6 +314,7 @@ class UI_MainWindow(object):
         
         # Botão: Pressionar Tecla
         self.press_key_btn = QPushButton("  Pressionar Tecla")
+        self.press_key_btn.setCursor(Qt.PointingHandCursor)
         self.press_key_btn.setStyleSheet(modern_button_style)
         self.press_key_btn.setIcon(QIcon("icons/press_key.svg"))
         self.press_key_btn.setIconSize(QSize(24, 24))
@@ -314,6 +323,7 @@ class UI_MainWindow(object):
         
         # Botão: Adicionar Espera
         self.wait_btn = QPushButton("  Adicionar Espera")
+        self.wait_btn.setCursor(Qt.PointingHandCursor)
         self.wait_btn.setStyleSheet(modern_button_style)
         self.wait_btn.setIcon(QIcon("icons/wait.svg"))
         self.wait_btn.setIconSize(QSize(24, 24))
@@ -322,6 +332,7 @@ class UI_MainWindow(object):
         
         # Botão: Adicionar Clique
         self.add_click_btn = QPushButton("  Adicionar Clique")
+        self.add_click_btn.setCursor(Qt.PointingHandCursor)
         self.add_click_btn.setStyleSheet(modern_button_style)
         self.add_click_btn.setIcon(QIcon("icons/mouse_click.svg"))
         self.add_click_btn.setIconSize(QSize(24, 24))
@@ -330,6 +341,7 @@ class UI_MainWindow(object):
         
         # Botão: Mover Mouse
         self.move_mouse_btn = QPushButton("  Mover Mouse")
+        self.move_mouse_btn.setCursor(Qt.PointingHandCursor)
         self.move_mouse_btn.setStyleSheet(modern_button_style)
         self.move_mouse_btn.setIcon(QIcon("icons/move_mouse.svg"))
         self.move_mouse_btn.setIconSize(QSize(24, 24))
@@ -338,6 +350,7 @@ class UI_MainWindow(object):
         
         # Botão: Verificar Imagem
         self.add_image_btn = QPushButton("  Verificar Imagem")
+        self.add_image_btn.setCursor(Qt.PointingHandCursor)
         self.add_image_btn.setStyleSheet(modern_button_style)
         self.add_image_btn.setIcon(QIcon("icons/image.svg"))
         self.add_image_btn.setIconSize(QSize(24, 24))
@@ -346,6 +359,7 @@ class UI_MainWindow(object):
         
         # Botão: Adicionar Grupo
         self.add_group_btn = QPushButton("  Adicionar Grupo")
+        self.add_group_btn.setCursor(Qt.PointingHandCursor)
         self.add_group_btn.setStyleSheet(modern_button_style)
         self.add_group_btn.setIcon(QIcon("icons/group.svg"))
         self.add_group_btn.setIconSize(QSize(24, 24))
