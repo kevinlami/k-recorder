@@ -118,7 +118,6 @@ class ActionRecorder():
 
         self.gui.add_key_btn.setText("Clicar Tecla")
         self.gui.add_key_btn.setEnabled(True)
-        self.key_thread.index = None
 
     def add_press_key(self, index=False):
         """Captura a tecla a ser pressionada e por quanto tempo em milissegundos."""
@@ -208,7 +207,7 @@ class ActionRecorder():
         self.gui.move_mouse_btn.setDisabled(True)
 
         self.mouse_listener = MouseListenerThread()
-        self.mouse_listener.index = index  
+        self.mouse_listener.index = index
         self.mouse_listener.positions.connect(self.on_move_mouse)
         self.mouse_listener.start()
 
@@ -223,13 +222,13 @@ class ActionRecorder():
         self.gui.move_mouse_btn.setText("Mover Mouse")
         self.gui.move_mouse_btn.setDisabled(False)
 
-    def add_image_check(self):
+    def add_image_check(self, index=False):
         self.overlay = OverlaySelection()
+        self.overlay.index = index
         self.overlay.region_selected.connect(self.capture_image)
         self.overlay.show_overlay()
 
     def capture_image(self, region):
-        print("Capturando imagem da região:", region)
         file_path, _ = QFileDialog.getSaveFileName(None, "Salvar Imagem", "", "PNG Files (*.png)")
         
         if file_path:
@@ -238,7 +237,11 @@ class ActionRecorder():
             self.capture_thread.start()
 
     def add_image_to_list(self, image_path):
-        self.parent.actions.append(("image_check", image_path))
+        index = self.overlay.index
+        if index is not False and 0 <= index < len(self.parent.actions):
+            self.parent.actions[index] = (("image_check", image_path))
+        else:
+            self.parent.actions.append(("image_check", image_path))
         self.gui.update_listbox()
 
     def add_group(self):
