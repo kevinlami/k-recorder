@@ -110,9 +110,9 @@ class ActionRecorder():
         index = self.key_thread.index
         if hotkey:
             if index is not False and 0 <= index < len(self.parent.actions):
-                self.parent.actions[index] = ("key", hotkey)
+                self.parent.actions[index] = ["key", hotkey]
             else:
-                self.parent.actions.append(("key", hotkey))
+                self.parent.actions.append(["key", hotkey])
 
             self.gui.update_listbox()
 
@@ -144,9 +144,9 @@ class ActionRecorder():
         index = self.key_thread.index
         if hotkey:
             if index is not False and 0 <= index < len(self.parent.actions):
-                self.parent.actions[index] = (("press_key", (hotkey, press_time)))
+                self.parent.actions[index] = (["press_key", (hotkey, press_time)])
             else:
-                self.parent.actions.append(("press_key", (hotkey, press_time)))
+                self.parent.actions.append(["press_key", (hotkey, press_time)])
             self.gui.update_listbox()
 
         # Restaurar o botão após a captura
@@ -164,9 +164,9 @@ class ActionRecorder():
 
         if ok and wait_time:
             if index is not False and 0 <= index < len(self.parent.actions):
-                self.parent.actions[index] = (("wait", wait_time))
+                self.parent.actions[index] = (["wait", wait_time])
             else:
-                self.parent.actions.append(("wait", wait_time))
+                self.parent.actions.append(["wait", wait_time])
             self.gui.update_listbox()
 
     def add_click(self, index=False):
@@ -196,9 +196,9 @@ class ActionRecorder():
             click_type = dialog.selected_button
             if click_type in ["left", "middle", "right"]:
                 if index is not False and 0 <= index < len(self.parent.actions):
-                    self.parent.actions[index] = (("click", click_type))
+                    self.parent.actions[index] = (["click", click_type])
                 else:
-                    self.parent.actions.append(("click", click_type))
+                    self.parent.actions.append(["click", click_type])
                 self.gui.update_listbox()
 
     def move_mouse(self, index=False):
@@ -215,9 +215,9 @@ class ActionRecorder():
         x, y = positions
         index = self.mouse_listener.index
         if index is not False and 0 <= index < len(self.parent.actions):
-            self.parent.actions[index] = (("move", (x, y)))
+            self.parent.actions[index] = (["move", (x, y)])
         else:
-            self.parent.actions.append(("move", (x, y)))
+            self.parent.actions.append(["move", (x, y)])
         self.gui.update_listbox()
         self.gui.move_mouse_btn.setText("Mover Mouse")
         self.gui.move_mouse_btn.setDisabled(False)
@@ -239,9 +239,9 @@ class ActionRecorder():
     def add_image_to_list(self, image_path):
         index = self.overlay.index
         if index is not False and 0 <= index < len(self.parent.actions):
-            self.parent.actions[index] = (("image_check", image_path))
+            self.parent.actions[index] = (["image_check", image_path])
         else:
-            self.parent.actions.append(("image_check", image_path))
+            self.parent.actions.append(["image_check", image_path])
         self.gui.update_listbox()
 
     def add_group(self):
