@@ -266,3 +266,16 @@ class ActionRecorder():
             self.parent.actions.append(["group_end", group_name])
         
         self.gui.update_listbox()
+
+    def edit_group(self, index=False):
+        group_name, ok = QInputDialog.getText(None, "Nome do Grupo", "Digite o nome do grupo:")
+        if not ok or not group_name:
+            return
+
+        group_type, group_value = self.parent.actions[index]
+        for group_end_index, (action, value) in enumerate(self.parent.actions):
+            if action == 'group_end' and value == group_value:
+                self.parent.actions[index] = ["group_start", group_name]
+                self.parent.actions[group_end_index] = ["group_end", group_name]
+                self.gui.update_listbox()
+                return

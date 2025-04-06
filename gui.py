@@ -374,7 +374,7 @@ class UI_MainWindow(object):
         self.actions_listbox.clear()
 
         for index, (action, value) in enumerate(self.parent.actions):
-            # Texto descritivo do item
+            hasEdit = True
             match action:
                 case "key":
                     item_text = f"Pressionar: {value}"
@@ -393,6 +393,7 @@ class UI_MainWindow(object):
                     item_text = f"📂 Grupo: {value}"
                 case "group_end":
                     item_text = f"📁 Fim do Grupo: {value}"
+                    hasEdit = False
 
             # Cria o QListWidgetItem (base)
             item = QListWidgetItem()
@@ -409,30 +410,31 @@ class UI_MainWindow(object):
             label.setStyleSheet("color: white; font-size: 14px;")
             layout.addWidget(label)
 
-            # Botão com ação
-            btn = QPushButton("")
-            btn.setIcon(QIcon("icons/edit.svg"))
-            btn.setIconSize(QSize(14, 14))
-            btn.setCursor(Qt.PointingHandCursor)
-            btn.setFixedSize(18, 18)
-            btn.setStyleSheet("""
-                QPushButton {
-                    border: none;
-                    background-color: #5a5a5a;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 0px;
-                    margin: 0px;
-                }
-                QPushButton:hover {
-                    background-color: #787878;
-                }
-                QPushButton:pressed {
-                    background-color: #3a3a3a;
-                }
-            """)
-            btn.clicked.connect(lambda _, i=index: self.handle_edit_action_click(i))
-            layout.addWidget(btn)
+            if hasEdit:
+                # Botão com ação
+                btn = QPushButton("")
+                btn.setIcon(QIcon("icons/edit.svg"))
+                btn.setIconSize(QSize(14, 14))
+                btn.setCursor(Qt.PointingHandCursor)
+                btn.setFixedSize(18, 18)
+                btn.setStyleSheet("""
+                    QPushButton {
+                        border: none;
+                        background-color: #5a5a5a;
+                        color: white;
+                        border-radius: 5px;
+                        padding: 0px;
+                        margin: 0px;
+                    }
+                    QPushButton:hover {
+                        background-color: #787878;
+                    }
+                    QPushButton:pressed {
+                        background-color: #3a3a3a;
+                    }
+                """)
+                btn.clicked.connect(lambda _, i=index: self.handle_edit_action_click(i))
+                layout.addWidget(btn)
 
             self.actions_listbox.setItemWidget(item, item_widget)
 
@@ -446,7 +448,7 @@ class UI_MainWindow(object):
             print(f"[Erro] Índice inválido: {index}")
             return
 
-        if not isinstance(action_data, tuple) or len(action_data) < 1:
+        if not isinstance(action_data, list) or len(action_data) < 1:
             print(f"[Erro] Formato inesperado na action: {action_data}")
             return
 
@@ -459,8 +461,7 @@ class UI_MainWindow(object):
             "click": self.action.add_click,
             "move": self.action.move_mouse,
             "image_check": self.action.add_image_check,
-            "group_start": self.action.add_group,
-            "group_end": self.action.add_group
+            "group_start": self.action.edit_group
         }
 
         handler = dispatch.get(action_type)
