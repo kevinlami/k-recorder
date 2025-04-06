@@ -78,34 +78,49 @@ class ImageCaptureThread(QThread):
         image.save(self.file_path)
         self.image_saved.emit(self.file_path)
 
-class ActionRecorder:
+class MouseListenerThread(QThread):
+    positions = Signal(list)
+
+    def run(self):
+        def on_click(x, y, button, pressed):
+            if pressed and button == mouse.Button.left:
+                self.positions.emit([x,y])
+                listener.stop()
+
+        listener = mouse.Listener(on_click=on_click)
+        listener.start()
+
+class ActionRecorder():
     def __init__(self, gui, parent):
+        super().__init__()
         self.parent = parent
         self.gui = gui
         self.key_thread = None
 
-    def add_key(self):
-        """Captura combinações de teclas, agora com a opção de pressionar a tecla por um tempo."""
-        # Mudar o texto do botão para "Gravando..." e desativar
+    def add_key(self, index=False):
         self.gui.add_key_btn.setText("Gravando...")
         self.gui.add_key_btn.setEnabled(False)
 
-        # Criar e iniciar a thread para capturar teclas
         self.key_thread = KeyCaptureThread()
+        self.key_thread.index = index  
         self.key_thread.keys_captured.connect(self.on_keys_captured)
         self.key_thread.start()
 
     def on_keys_captured(self, hotkey):
-        """Callback chamada quando as teclas forem capturadas."""
+        index = self.key_thread.index
         if hotkey:
-            self.parent.actions.append(("key", hotkey))
+            if index is not False and 0 <= index < len(self.parent.actions):
+                self.parent.actions[index] = ("key", hotkey)
+            else:
+                self.parent.actions.append(("key", hotkey))
+
             self.gui.update_listbox()
 
-        # Restaurar o botão após a captura
         self.gui.add_key_btn.setText("Clicar Tecla")
         self.gui.add_key_btn.setEnabled(True)
+        self.key_thread.index = None
 
-    def add_press_key(self):
+    def add_press_key(self, index=False):
         """Captura a tecla a ser pressionada e por quanto tempo em milissegundos."""
         press_time, ok = QInputDialog.getInt(
             self.gui.controls_widget,  # Usa um QWidget válido
@@ -122,36 +137,40 @@ class ActionRecorder:
 
             # Criar e iniciar a thread para capturar a tecla
             self.key_thread = PressKeyCaptureThread(press_time)
+            self.key_thread.index = index
             self.key_thread.keys_captured.connect(self.on_press_key_captured)
             self.key_thread.start()
 
     def on_press_key_captured(self, hotkey, press_time):
-        """Callback chamada quando a tecla pressionada for capturada."""
+        index = self.key_thread.index
         if hotkey:
-            self.parent.actions.append(("press_key", (hotkey, press_time)))
+            if index is not False and 0 <= index < len(self.parent.actions):
+                self.parent.actions[index] = (("press_key", (hotkey, press_time)))
+            else:
+                self.parent.actions.append(("press_key", (hotkey, press_time)))
             self.gui.update_listbox()
 
         # Restaurar o botão após a captura
         self.gui.press_key_btn.setText("Pressionar Tecla")
         self.gui.press_key_btn.setEnabled(True)
 
-    def add_wait(self):
-        """Adiciona um tempo de espera em milissegundos."""
+    def add_wait(self, index=False):
         wait_time, ok = QInputDialog.getInt(
             self.gui.controls_widget,
             "Adicionar Espera",
             "Digite o tempo em milissegundos:",
-            value=200,  # Valor inicial sugerido
-            minValue=1  # Defina um valor mínimo para evitar números negativos
+            value=200,
+            minValue=1
         )
 
         if ok and wait_time:
-            self.parent.actions.append(("wait", wait_time))
+            if index is not False and 0 <= index < len(self.parent.actions):
+                self.parent.actions[index] = (("wait", wait_time))
+            else:
+                self.parent.actions.append(("wait", wait_time))
             self.gui.update_listbox()
 
-    def add_click(self):
-        """Adiciona um clique do mouse usando botões em vez de input, com janela centralizada."""
-        
+    def add_click(self, index=False):
         class ClickDialog(QDialog):
             def __init__(self, parent: QWidget = None):
                 super().__init__(parent)
@@ -177,25 +196,32 @@ class ActionRecorder:
         if dialog.exec():
             click_type = dialog.selected_button
             if click_type in ["left", "middle", "right"]:
-                self.parent.actions.append(("click", click_type))
+                if index is not False and 0 <= index < len(self.parent.actions):
+                    self.parent.actions[index] = (("click", click_type))
+                else:
+                    self.parent.actions.append(("click", click_type))
                 self.gui.update_listbox()
 
-    def move_mouse(self):
+    def move_mouse(self, index=False):
         """Aguarda um clique do usuário e captura a posição do mouse."""
         self.gui.move_mouse_btn.setText("Clique para gravar")
         self.gui.move_mouse_btn.setDisabled(True)
 
-        def on_click(x, y, button, pressed):
-            if pressed and button == mouse.Button.left:  # Captura apenas o clique esquerdo
-                self.parent.actions.append(("move", (x, y)))
-                self.gui.update_listbox()
-                self.gui.move_mouse_btn.setText("Mover Mouse")
-                self.gui.move_mouse_btn.setDisabled(False)
-                listener.stop()  # Para o listener após capturar o clique
+        self.mouse_listener = MouseListenerThread()
+        self.mouse_listener.index = index  
+        self.mouse_listener.positions.connect(self.on_move_mouse)
+        self.mouse_listener.start()
 
-        # Executa o listener em uma thread separada
-        listener = mouse.Listener(on_click=on_click)
-        listener.start()
+    def on_move_mouse(self, positions):
+        x, y = positions
+        index = self.mouse_listener.index
+        if index is not False and 0 <= index < len(self.parent.actions):
+            self.parent.actions[index] = (("move", (x, y)))
+        else:
+            self.parent.actions.append(("move", (x, y)))
+        self.gui.update_listbox()
+        self.gui.move_mouse_btn.setText("Mover Mouse")
+        self.gui.move_mouse_btn.setDisabled(False)
 
     def add_image_check(self):
         self.overlay = OverlaySelection()

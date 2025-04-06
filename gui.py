@@ -369,15 +369,12 @@ class UI_MainWindow(object):
         self.content_layout.addWidget(self.action_buttons_frame)
 
     def update_listbox(self):
-        """Atualiza o QListWidget sem perder a posição do scroll."""
-        # Salva a posição atual do scroll
+        """Atualiza o QListWidget com botão por item, mantendo scroll."""
         scroll_pos = self.actions_listbox.verticalScrollBar().value()
-
-        # Limpa a lista
         self.actions_listbox.clear()
 
-        # Atualiza os itens
-        for action, value in self.parent.actions:
+        for index, (action, value) in enumerate(self.parent.actions):
+            # Texto descritivo do item
             match action:
                 case "key":
                     item_text = f"Pressionar: {value}"
@@ -396,10 +393,79 @@ class UI_MainWindow(object):
                     item_text = f"📂 Grupo: {value}"
                 case "group_end":
                     item_text = f"📁 Fim do Grupo: {value}"
-            
-            # Adiciona o item à lista
-            self.actions_listbox.addItem(item_text)
 
-        # Restaura a posição do scroll
+            # Cria o QListWidgetItem (base)
+            item = QListWidgetItem()
+            item.setSizeHint(QSize(300, 40))  # Altura customizada
+            self.actions_listbox.addItem(item)
+
+            # Cria o container visual para o item
+            item_widget = QWidget()
+            layout = QHBoxLayout(item_widget)
+            layout.setContentsMargins(10, 5, 10, 5)
+
+            # Label com o texto do item
+            label = QLabel(item_text)
+            label.setStyleSheet("color: white; font-size: 14px;")
+            layout.addWidget(label)
+
+            # Botão com ação
+            btn = QPushButton("")
+            btn.setIcon(QIcon("icons/edit.svg"))
+            btn.setIconSize(QSize(14, 14))
+            btn.setCursor(Qt.PointingHandCursor)
+            btn.setFixedSize(18, 18)
+            btn.setStyleSheet("""
+                QPushButton {
+                    border: none;
+                    background-color: #5a5a5a;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 0px;
+                    margin: 0px;
+                }
+                QPushButton:hover {
+                    background-color: #787878;
+                }
+                QPushButton:pressed {
+                    background-color: #3a3a3a;
+                }
+            """)
+            btn.clicked.connect(lambda _, i=index: self.handle_edit_action_click(i))
+            layout.addWidget(btn)
+
+            self.actions_listbox.setItemWidget(item, item_widget)
+
+        # Restaura scroll
         self.actions_listbox.verticalScrollBar().setValue(scroll_pos)
-        
+
+    def handle_edit_action_click(self, index):
+        try:
+            action_data = self.parent.actions[index]
+        except IndexError:
+            print(f"[Erro] Índice inválido: {index}")
+            return
+
+        if not isinstance(action_data, tuple) or len(action_data) < 1:
+            print(f"[Erro] Formato inesperado na action: {action_data}")
+            return
+
+        action_type = action_data[0]
+
+        dispatch = {
+            "key": self.action.add_key,
+            "press_key": self.action.add_press_key,
+            "wait": self.action.add_wait,
+            "click": self.action.add_click,
+            "move": self.action.move_mouse,
+            "image_check": self.action.add_image_check,
+            "group_start": self.action.add_group,
+            "group_end": self.action.add_group
+        }
+
+        handler = dispatch.get(action_type)
+
+        if handler:
+            handler(index)
+        else:
+            print(f"[Erro] Tipo de ação desconhecido: {action_type}")
