@@ -1,96 +1,11 @@
 from qt_core import *
-from pynput import mouse
 from overlay_selection import OverlaySelection
-from input_dialog import InputDialogRecorder
-from button_dialog import KeyValueOptionDialogRecorder
-import keyboard
-import pyautogui
-import threading
-import sys
-
-class PressKeyCaptureThread(QThread):
-    keys_captured = Signal(str, int)  # Sinal para enviar a tecla capturada e o tempo
-
-    def __init__(self, press_time):
-        super().__init__()
-        self.press_time = press_time
-
-    def run(self):
-        """Captura a tecla a ser pressionada e retorna junto com o tempo."""
-        recorded_keys = []  # Lista para manter a ordem
-        pressed_keys = set()  # Controla teclas pressionadas
-
-        while True:
-            event = keyboard.read_event()
-
-            if event.event_type == "down":
-                if event.name not in pressed_keys:
-                    recorded_keys.append(event.name)  # Adiciona na ordem
-                    pressed_keys.add(event.name)
-            elif event.event_type == "up":
-                if event.name in pressed_keys:
-                    pressed_keys.remove(event.name)
-
-            # Sai quando todas as teclas forem soltas
-            if not pressed_keys:
-                break
-
-        hotkey = "+".join(recorded_keys)
-        if hotkey:
-            self.keys_captured.emit(hotkey, self.press_time)  # Emite o sinal
-
-class KeyCaptureThread(QThread):
-    keys_captured = Signal(str)  # Sinal para enviar as teclas capturadas
-
-    def run(self):
-        """Captura combinações de teclas em uma thread separada."""
-        recorded_keys = []  # Lista para manter a ordem
-        pressed_keys = set()  # Controla teclas pressionadas
-
-        while True:
-            event = keyboard.read_event()
-
-            if event.event_type == "down":
-                if event.name not in pressed_keys:
-                    recorded_keys.append(event.name)  # Adiciona na ordem
-                    pressed_keys.add(event.name)
-            elif event.event_type == "up":
-                if event.name in pressed_keys:
-                    pressed_keys.remove(event.name)
-
-            # Sai quando todas as teclas forem soltas
-            if not pressed_keys:
-                break
-
-        hotkey = "+".join(recorded_keys)
-        if hotkey:
-            self.keys_captured.emit(hotkey)  # Emite o sinal com a tecla capturada
-
-class ImageCaptureThread(QThread):
-    image_saved = Signal(str)
-
-    def __init__(self, region, file_path):
-        super().__init__()
-        self.region = region
-        self.file_path = file_path
-
-    def run(self):
-        x, y, w, h = self.region.x(), self.region.y(), self.region.width(), self.region.height()
-        image = pyautogui.screenshot(region=(x, y, w, h))
-        image.save(self.file_path)
-        self.image_saved.emit(self.file_path)
-
-class MouseListenerThread(QThread):
-    positions = Signal(list)
-
-    def run(self):
-        def on_click(x, y, button, pressed):
-            if pressed and button == mouse.Button.left:
-                self.positions.emit([x,y])
-                listener.stop()
-
-        listener = mouse.Listener(on_click=on_click)
-        listener.start()
+from dialog.input_dialog import InputDialogRecorder
+from dialog.button_dialog import KeyValueOptionDialogRecorder
+from thread.key import KeyCaptureThread
+from thread.press_key import PressKeyCaptureThread
+from thread.mouse_listener import MouseListenerThread
+from thread.image_capture import ImageCaptureThread
 
 class ActionRecorder():
     def __init__(self, gui, parent):

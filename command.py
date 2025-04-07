@@ -1,5 +1,5 @@
 from qt_core import *
-from message_dialog import MessageBoxRecorder
+from dialog.message_dialog import MessageBoxRecorder
 import json
 
 class CommandRecorder:
