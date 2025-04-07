@@ -1,15 +1,17 @@
 from qt_core import *
+from message_box import MessageBoxRecorder
 import json
 
 class CommandRecorder:
     def __init__(self, gui, parent):
         self.parent = parent
         self.gui = gui
+        self.message_box = MessageBoxRecorder
 
     def save_macros(self):
         """Salva a lista de ações em um arquivo."""
         if not self.parent.actions:
-            QMessageBox.warning(self.parent, "Aviso", "Nenhuma ação para salvar!")
+            self.message_box.create_box("warning", "Nenhuma ação para salvar!", "Aviso", False, False)
             return
 
         file_path, _ = QFileDialog.getSaveFileName(self.parent, "Salvar Macro", "", "JSON Files (*.json)")
@@ -17,9 +19,10 @@ class CommandRecorder:
             try:
                 with open(file_path, 'w') as file:
                     json.dump(self.parent.actions, file)
-                QMessageBox.information(self.parent, "Sucesso", "Macros salvos com sucesso!")
+
+                self.message_box.create_box("info", "Macros salvos com sucesso!", "Sucesso")
             except Exception as e:
-                QMessageBox.critical(self.parent, "Erro", f"Erro ao salvar macros: {e}")
+                self.message_box.create_box("error", f"Erro ao salvar macros: {e}", "Erro")
 
     def load_macros(self):
         """Carrega a lista de ações de um arquivo."""
@@ -29,9 +32,8 @@ class CommandRecorder:
                 with open(file_path, 'r') as file:
                     self.parent.actions = json.load(file)
                 self.gui.update_listbox()
-                QMessageBox.information(self.parent, "Sucesso", "Macros carregados com sucesso!")
             except Exception as e:
-                QMessageBox.critical(self.parent, "Erro", f"Erro ao carregar macros: {e}")
+                self.message_box.create_box("error", f"Erro ao carregar macros: {e}", "Erro")
     
     def remove_item(self):
         """Remove itens selecionados, considerando grupos."""
@@ -59,7 +61,7 @@ class CommandRecorder:
             # Limpa a lista de ações exibida na interface
             self.gui.actions_listbox.clear()
         except Exception as e:
-            QMessageBox.critical(None, "Erro", f"Erro ao resetar o macro: {e}")
+            self.message_box.create_box("error", f"Erro ao resetar o macro: {e}", "Erro")
 
     def move_up(self):
         """Move ações ou grupos selecionados para cima."""
