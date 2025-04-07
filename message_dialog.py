@@ -1,9 +1,6 @@
 from qt_core import *
 
 class MessageBoxRecorder:
-    def __init__(self):
-        super().__init__()
-
     def create_box(type, message, title, btn_yes=False, btn_no=False):
         msg_box = QMessageBox()
         msg_box.setWindowTitle(title)

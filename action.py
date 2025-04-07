@@ -1,6 +1,8 @@
 from qt_core import *
 from pynput import mouse
 from overlay_selection import OverlaySelection
+from input_dialog import InputDialogRecorder
+from button_dialog import KeyValueOptionDialogRecorder
 import keyboard
 import pyautogui
 import threading
@@ -121,13 +123,13 @@ class ActionRecorder():
 
     def add_press_key(self, index=False):
         """Captura a tecla a ser pressionada e por quanto tempo em milissegundos."""
-        press_time, ok = QInputDialog.getInt(
-            self.gui.controls_widget,  # Usa um QWidget válido
-            "Tempo de Pressão", 
-            "Digite o tempo em milissegundos que a tecla ficará pressionada:", 
-            value=200,  # Valor inicial sugerido
-            minValue=0,  # Valor mínimo
-            maxValue=10000,  # Valor máximo
+        press_time, ok = InputDialogRecorder.get_int(
+            self.gui.controls_widget,
+            "Tempo de Pressão",
+            "Digite o tempo em milissegundos que a tecla ficará pressionada:",
+            value=200,
+            min_value=0,
+            max_value=10000
         )
         
         if ok:
@@ -154,12 +156,12 @@ class ActionRecorder():
         self.gui.press_key_btn.setEnabled(True)
 
     def add_wait(self, index=False):
-        wait_time, ok = QInputDialog.getInt(
+        wait_time, ok = InputDialogRecorder.get_int(
             self.gui.controls_widget,
             "Adicionar Espera",
             "Digite o tempo em milissegundos:",
             value=200,
-            minValue=1
+            min_value=1
         )
 
         if ok and wait_time:
@@ -170,30 +172,17 @@ class ActionRecorder():
             self.gui.update_listbox()
 
     def add_click(self, index=False):
-        class ClickDialog(QDialog):
-            def __init__(self, parent: QWidget = None):
-                super().__init__(parent)
-                self.setWindowTitle("Adicionar Clique")
-                self.setFixedSize(250, 100)
-                
-                layout = QVBoxLayout()
-                self.selected_button = None
+        click_type, ok = KeyValueOptionDialogRecorder.get_option(
+            "Selecionar Clique",
+            {
+                "left": "Clique Esquerdo",
+                "middle": "Clique do Meio",
+                "right": "Clique Direito"
+            },
+            self.gui.controls_widget
+        )
 
-                def set_click(value):
-                    self.selected_button = value
-                    self.accept()  # Fecha a janela ao escolher
-
-                # Criando botões para seleção
-                for btn_text in ["Left", "Middle", "Right"]:
-                    button = QPushButton(btn_text)
-                    button.clicked.connect(lambda checked, b=btn_text.lower(): set_click(b))
-                    layout.addWidget(button)
-
-                self.setLayout(layout)
-
-        dialog = ClickDialog(self.gui if isinstance(self.gui, QWidget) else None)
-        if dialog.exec():
-            click_type = dialog.selected_button
+        if ok:
             if click_type in ["left", "middle", "right"]:
                 if index is not False and 0 <= index < len(self.parent.actions):
                     self.parent.actions[index] = (["click", click_type])
@@ -246,7 +235,7 @@ class ActionRecorder():
 
     def add_group(self):
         """Adiciona um novo grupo em torno dos itens selecionados ou ao final da lista."""
-        group_name, ok = QInputDialog.getText(None, "Nome do Grupo", "Digite o nome do grupo:")
+        group_name, ok = InputDialogRecorder.get_text(None, "Nome do Grupo", "Digite o nome do grupo:")
         if not ok or not group_name:
             return  # Se o usuário cancelar ou não digitar nada, não faz nada.
 
@@ -268,7 +257,7 @@ class ActionRecorder():
         self.gui.update_listbox()
 
     def edit_group(self, index=False):
-        group_name, ok = QInputDialog.getText(None, "Nome do Grupo", "Digite o nome do grupo:")
+        group_name, ok = InputDialogRecorder.get_text(None, "Nome do Grupo", "Digite o nome do grupo:")
         if not ok or not group_name:
             return
 
