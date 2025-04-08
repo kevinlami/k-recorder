@@ -1,6 +1,7 @@
 from qt_core import *
 from command import CommandRecorder
 from action import ActionRecorder
+from utils import resource_path
 import os
 
 class UI_MainWindow(object):
@@ -10,10 +11,10 @@ class UI_MainWindow(object):
 
         self.parent = parent
 
-        play_pixmap = QPixmap("icons/play_icon.png").scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        play_pixmap = QPixmap(resource_path("icons/play_icon.png")).scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.play_icon = QIcon(play_pixmap)
 
-        stop_pixmap = QPixmap("icons/stop_icon.png").scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        stop_pixmap = QPixmap(resource_path("icons/stop_icon.png")).scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.stop_icon = QIcon(stop_pixmap)
 
         self.command = CommandRecorder(self, parent)
@@ -157,35 +158,35 @@ class UI_MainWindow(object):
         self.remove_btn = QPushButton("  Remover")
         self.remove_btn.setCursor(Qt.PointingHandCursor)
         self.remove_btn.setStyleSheet(red_button_style)
-        self.remove_btn.setIcon(QIcon("icons/delete.svg"))
+        self.remove_btn.setIcon(QIcon(resource_path("icons/delete.svg")))
         self.remove_btn.setIconSize(QSize(18, 18))
         self.remove_btn.clicked.connect(self.command.remove_item)
 
         self.move_up_btn = QPushButton("  Cima")
         self.move_up_btn.setCursor(Qt.PointingHandCursor)
         self.move_up_btn.setStyleSheet(blue_button_style)
-        self.move_up_btn.setIcon(QIcon("icons/move_up.svg"))
+        self.move_up_btn.setIcon(QIcon(resource_path("icons/move_up.svg")))
         self.move_up_btn.setIconSize(QSize(18, 18))
         self.move_up_btn.clicked.connect(self.command.move_up)
 
         self.move_down_btn = QPushButton("  Baixo")
         self.move_down_btn.setCursor(Qt.PointingHandCursor)
         self.move_down_btn.setStyleSheet(blue_button_style)
-        self.move_down_btn.setIcon(QIcon("icons/move_down.svg"))
+        self.move_down_btn.setIcon(QIcon(resource_path("icons/move_down.svg")))
         self.move_down_btn.setIconSize(QSize(18, 18))
         self.move_down_btn.clicked.connect(self.command.move_down)
 
         self.duplicate_btn = QPushButton("  Duplicar")
         self.duplicate_btn.setCursor(Qt.PointingHandCursor)
         self.duplicate_btn.setStyleSheet(yellow_button_style)
-        self.duplicate_btn.setIcon(QIcon("icons/duplicate.svg"))
+        self.duplicate_btn.setIcon(QIcon(resource_path("icons/duplicate.svg")))
         self.duplicate_btn.setIconSize(QSize(18, 18))
         self.duplicate_btn.clicked.connect(self.command.duplicate_items)
 
         self.reset_btn = QPushButton("  Resetar")
         self.reset_btn.setCursor(Qt.PointingHandCursor)
         self.reset_btn.setStyleSheet(light_blue_button_style)
-        self.reset_btn.setIcon(QIcon("icons/reset.svg"))
+        self.reset_btn.setIcon(QIcon(resource_path("icons/reset.svg")))
         self.reset_btn.setIconSize(QSize(18, 18))
         self.reset_btn.clicked.connect(self.command.reset_macro)
 
@@ -307,7 +308,7 @@ class UI_MainWindow(object):
         self.add_key_btn = QPushButton("  Clicar Tecla")
         self.add_key_btn.setCursor(Qt.PointingHandCursor)
         self.add_key_btn.setStyleSheet(modern_button_style)
-        self.add_key_btn.setIcon(QIcon("icons/key.svg"))
+        self.add_key_btn.setIcon(QIcon(resource_path("icons/key.svg")))
         self.add_key_btn.setIconSize(QSize(24, 24))
         self.add_key_btn.clicked.connect(self.action.add_key)
         action_layout.addWidget(self.add_key_btn)
@@ -316,7 +317,7 @@ class UI_MainWindow(object):
         self.press_key_btn = QPushButton("  Pressionar Tecla")
         self.press_key_btn.setCursor(Qt.PointingHandCursor)
         self.press_key_btn.setStyleSheet(modern_button_style)
-        self.press_key_btn.setIcon(QIcon("icons/press_key.svg"))
+        self.press_key_btn.setIcon(QIcon(resource_path("icons/press_key.svg")))
         self.press_key_btn.setIconSize(QSize(24, 24))
         self.press_key_btn.clicked.connect(self.action.add_press_key)
         action_layout.addWidget(self.press_key_btn)
@@ -325,7 +326,7 @@ class UI_MainWindow(object):
         self.wait_btn = QPushButton("  Adicionar Espera")
         self.wait_btn.setCursor(Qt.PointingHandCursor)
         self.wait_btn.setStyleSheet(modern_button_style)
-        self.wait_btn.setIcon(QIcon("icons/wait.svg"))
+        self.wait_btn.setIcon(QIcon(resource_path("icons/wait.svg")))
         self.wait_btn.setIconSize(QSize(24, 24))
         self.wait_btn.clicked.connect(self.action.add_wait)
         action_layout.addWidget(self.wait_btn)
@@ -334,7 +335,7 @@ class UI_MainWindow(object):
         self.add_click_btn = QPushButton("  Adicionar Clique")
         self.add_click_btn.setCursor(Qt.PointingHandCursor)
         self.add_click_btn.setStyleSheet(modern_button_style)
-        self.add_click_btn.setIcon(QIcon("icons/mouse_click.svg"))
+        self.add_click_btn.setIcon(QIcon(resource_path("icons/mouse_click.svg")))
         self.add_click_btn.setIconSize(QSize(24, 24))
         self.add_click_btn.clicked.connect(self.action.add_click)
         action_layout.addWidget(self.add_click_btn)
@@ -343,7 +344,7 @@ class UI_MainWindow(object):
         self.move_mouse_btn = QPushButton("  Mover Mouse")
         self.move_mouse_btn.setCursor(Qt.PointingHandCursor)
         self.move_mouse_btn.setStyleSheet(modern_button_style)
-        self.move_mouse_btn.setIcon(QIcon("icons/move_mouse.svg"))
+        self.move_mouse_btn.setIcon(QIcon(resource_path("icons/move_mouse.svg")))
         self.move_mouse_btn.setIconSize(QSize(24, 24))
         self.move_mouse_btn.clicked.connect(self.action.move_mouse)
         action_layout.addWidget(self.move_mouse_btn)
@@ -352,7 +353,7 @@ class UI_MainWindow(object):
         self.add_image_btn = QPushButton("  Verificar Imagem")
         self.add_image_btn.setCursor(Qt.PointingHandCursor)
         self.add_image_btn.setStyleSheet(modern_button_style)
-        self.add_image_btn.setIcon(QIcon("icons/image.svg"))
+        self.add_image_btn.setIcon(QIcon(resource_path("icons/image.svg")))
         self.add_image_btn.setIconSize(QSize(24, 24))
         self.add_image_btn.clicked.connect(self.action.add_image_check)
         action_layout.addWidget(self.add_image_btn)
@@ -361,7 +362,7 @@ class UI_MainWindow(object):
         self.add_group_btn = QPushButton("  Adicionar Grupo")
         self.add_group_btn.setCursor(Qt.PointingHandCursor)
         self.add_group_btn.setStyleSheet(modern_button_style)
-        self.add_group_btn.setIcon(QIcon("icons/group.svg"))
+        self.add_group_btn.setIcon(QIcon(resource_path("icons/group.svg")))
         self.add_group_btn.setIconSize(QSize(24, 24))
         self.add_group_btn.clicked.connect(self.action.add_group)
         action_layout.addWidget(self.add_group_btn)
@@ -413,7 +414,7 @@ class UI_MainWindow(object):
             if hasEdit:
                 # Botão com ação
                 btn = QPushButton("")
-                btn.setIcon(QIcon("icons/edit.svg"))
+                btn.setIcon(QIcon(resource_path("icons/edit.svg")))
                 btn.setIconSize(QSize(14, 14))
                 btn.setCursor(Qt.PointingHandCursor)
                 btn.setFixedSize(18, 18)
