@@ -1,7 +1,1 @@
-ttkbootstrap
-pynput
-Pillow
-pyautogui
-keyboard
-opencv-python
-numpy
+
