@@ -1,1 +1,6 @@
-
+PySide6
+pyautogui
+keyboard
+pynput
+opencv-python
+numpy
